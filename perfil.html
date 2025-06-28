@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Cliente</title>
+</head>
+<body>
+    <h1>Perfil de {{ cliente.nombre }}</h1>
+    
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="messages">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <h2>Registrar Mascota</h2>
+    <form method="POST" action="{{ url_for('perfil', cliente_id=cliente.id) }}">
+        {{ formulario.hidden_tag() }}
+        <div>
+            {{ formulario.nombre.label }}<br>
+            {{ formulario.nombre() }}
+            {% if formulario.nombre.errors %}
+                <ul class="errors">
+                    {% for error in formulario.nombre.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div>
+            {{ formulario.raza.label }}<br>
+            {{ formulario.raza() }}
+            {% if formulario.raza.errors %}
+                <ul class="errors">
+                    {% for error in formulario.raza.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div>
+            {{ formulario.peso.label }}<br>
+            {{ formulario.peso() }}
+            {% if formulario.peso.errors %}
+                <ul class="errors">
+                    {% for error in formulario.peso.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div>
+            {{ formulario.edad.label }}<br>
+            {{ formulario.edad() }}
+            {% if formulario.edad.errors %}
+                <ul class="errors">
+                    {% for error in formulario.edad.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div>
+            {{ formulario.submit() }}
+        </div>
+    </form>
+
+    <h2>Mascotas Registradas</h2>
+    {% if mascotas %}
+        <ul>
+            {% for mascota in mascotas %}
+                <li>{{ mascota.nombre }} - {{ mascota.raza }} ({{ mascota.edad }} años, {{ mascota.peso }} kg)</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay mascotas registradas.</p>
+    {% endif %}
+
+    <h2>Citas Agendadas</h2>
+    {% if citas %}
+        <ul>
+            {% for cita in citas %}
+                <li>{{ cita.fecha.strftime('%d/%m/%Y %H:%M') }} - Mascota ID: {{ cita.mascota_id }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay citas agendadas.</p>
+    {% endif %}
+
+    <h2>Solicitar Hora con Veterinario</h2>
+    <a href="{{ url_for('solicitar_cita') }}">Solicitar Hora</a>
+    
+    <p><a href="{{ url_for('logout') }}">Cerrar Sesión</a></p>
+</body>
+</html>
