@@ -10,15 +10,14 @@ from flask_jwt_extended import (
     JWTManager, create_access_token, jwt_required, 
     get_jwt_identity, set_access_cookies, unset_jwt_cookies
 )
-#flask es una app web dirigida a python
-#configura la ubicación de los archivos y plantillas para la aplicación Flask
+
 base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, 'plantillas')
 
 app = Flask(__name__, template_folder=template_dir)
 app.config.from_object(Configuracion)
 
-# Configuración JWT (una medida de seguridad q resguarda datos y procesos de la app ademas de autentificar y autorizar.)
+
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_SECURE'] = False
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
