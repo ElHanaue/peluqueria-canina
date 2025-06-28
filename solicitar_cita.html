@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitar Cita</title>
+    <style>
+        .error { color: red; margin-top: 5px; }
+        .success { color: green; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { 
+            padding: 8px; 
+            width: 100%; 
+            max-width: 300px; 
+            box-sizing: border-box;
+        }
+        button { 
+            padding: 10px 15px; 
+            background-color: #4CAF50; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+        }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Solicitar Cita para Peluquería</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="messages">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <form method="POST" action="{{ url_for('solicitar_cita') }}">
+        {{ formulario.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ formulario.fecha.label }}
+            <input type="datetime-local" 
+                   id="fecha" 
+                   name="fecha" 
+                   min="{{ ahora.strftime('%Y-%m-%dT%H:%M') }}"
+                   required>
+            {% if formulario.fecha.errors %}
+                <div class="error">
+                    {% for error in formulario.fecha.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ formulario.mascota_id.label }}
+            {{ formulario.mascota_id() }}
+            {% if formulario.mascota_id.errors %}
+                <div class="error">
+                    {% for error in formulario.mascota_id.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <button type="submit">Agendar Cita</button>
+        </div>
+    </form>
+    
+    <p><a href="{{ url_for('perfil', cliente_id=cliente.id) }}">← Volver al perfil</a></p>
+</body>
+</html>
